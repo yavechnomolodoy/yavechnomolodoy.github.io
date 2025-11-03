@@ -101,6 +101,33 @@
             color: #333;
         }
 
+        /* Уведомление о копировании */
+        .copy-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            z-index: 1002;
+            font-size: 1em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .copy-notification.show {
+            opacity: 1;
+        }
+
+        .light-theme .copy-notification {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
         /* Частицы на фоне */
         #particles-js {
             position: fixed;
@@ -393,6 +420,8 @@
             color: #ffd700;
             text-decoration: none;
             transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
         .email-link:hover {
@@ -406,6 +435,33 @@
 
         .light-theme .email-link:hover {
             color: #ff3366;
+        }
+
+        /* Подсказка для почты */
+        .email-link::after {
+            content: '📋 Нажмите чтобы скопировать';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.7em;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .email-link:hover::after {
+            opacity: 1;
+        }
+
+        .light-theme .email-link::after {
+            background: rgba(255,255,255,0.9);
+            color: #333;
         }
 
         /* Тусклые радужные элементы */
@@ -524,6 +580,11 @@
             .music-toggle, .music-prev, .music-next, .music-info {
                 display: none;
             }
+
+            /* Убираем подсказку на мобильных */
+            .email-link::after {
+                display: none;
+            }
         }
 
         /* Дополнительный отступ для контактов */
@@ -543,6 +604,9 @@
     
     <!-- Сердечко над заголовком -->
     <div class="center-heart">❤️</div>
+
+    <!-- Уведомление о копировании -->
+    <div class="copy-notification" id="copyNotification">📧 Email скопирован!</div>
 
     <!-- Кнопки управления - ОПУЩЕНЫ НИЖЕ -->
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌙</button>
@@ -664,7 +728,7 @@
         <section id="contact" class="section">
             <h2>📞 Контакты</h2>
             <div class="contact-info">
-                <p>📧 Email: <a href="mailto:yavechnomolodoy@gmail.com" class="email-link">yavechnomolodoy@gmail.com</a></p>
+                <p>📧 Email: <span class="email-link" id="emailLink">yavechnomolodoy@gmail.com</span></p>
                 <p>🐱 GitHub: yavechnomolodoy</p>
                 <p>💼 Портфолио: этот сайт</p>
             </div>
@@ -674,6 +738,50 @@
     <!-- Скрипты -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
+        // Функция копирования email
+        function copyEmail() {
+            const email = 'yavechnomolodoy@gmail.com';
+            
+            // Создаем временный textarea для копирования
+            const textarea = document.createElement('textarea');
+            textarea.value = email;
+            document.body.appendChild(textarea);
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // Для мобильных устройств
+            
+            try {
+                // Пытаемся скопировать
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopyNotification();
+                }
+            } catch (err) {
+                console.log('Не удалось скопировать email: ', err);
+                // Альтернативный способ через Clipboard API
+                navigator.clipboard.writeText(email).then(() => {
+                    showCopyNotification();
+                }).catch(err => {
+                    console.log('Clipboard API не поддерживается: ', err);
+                });
+            }
+            
+            // Убираем временный элемент
+            document.body.removeChild(textarea);
+        }
+
+        // Показ уведомления о копировании
+        function showCopyNotification() {
+            const notification = document.getElementById('copyNotification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        // Назначаем обработчик для email
+        document.getElementById('emailLink').addEventListener('click', copyEmail);
+
         // Музыкальные треки
         const musicTracks = [
             {
