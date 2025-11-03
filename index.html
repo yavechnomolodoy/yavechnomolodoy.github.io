@@ -58,7 +58,7 @@
             animation: starMove 15s linear infinite, twinkle 8s infinite;
         }
 
-        /* Кометы с хвостами */
+        /* Кометы с хвостами сзади */
         .comet {
             position: absolute;
             width: 6px;
@@ -67,30 +67,31 @@
             border-radius: 50%;
             opacity: 0;
             filter: blur(0.5px);
+            z-index: 1;
         }
 
         .comet::before {
             content: '';
             position: absolute;
             top: 50%;
-            left: -50px;
-            width: 50px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ffffff, #ffffff);
+            right: -80px; /* Хвост сзади */
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #ffffff, rgba(255,255,255,0.7), transparent);
             transform: translateY(-50%);
-            filter: blur(1px);
+            filter: blur(2px);
         }
 
         .comet::after {
             content: '';
             position: absolute;
             top: 50%;
-            left: -100px;
-            width: 100px;
+            right: -150px; /* Длинный хвост сзади */
+            width: 150px;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), rgba(255,255,255,0.3));
+            background: linear-gradient(90deg, rgba(255,255,255,0.5), rgba(255,255,255,0.2), transparent);
             transform: translateY(-50%);
-            filter: blur(2px);
+            filter: blur(3px);
         }
 
         @keyframes starMove {
@@ -107,9 +108,10 @@
             50% { opacity: 1; }
         }
 
-        @keyframes cometFly1 {
+        /* Анимации комет в разные стороны (только не вверх) */
+        @keyframes cometRight {
             0% {
-                transform: translateX(100vw) translateY(100vh) rotate(-30deg);
+                transform: translateX(-100px) translateY(100vh) rotate(0deg);
                 opacity: 0;
             }
             10% {
@@ -119,14 +121,14 @@
                 opacity: 1;
             }
             100% {
-                transform: translateX(-100px) translateY(-100px) rotate(-30deg);
+                transform: translateX(100vw) translateY(-100px) rotate(0deg);
                 opacity: 0;
             }
         }
 
-        @keyframes cometFly2 {
+        @keyframes cometLeft {
             0% {
-                transform: translateX(120vw) translateY(80vh) rotate(-45deg);
+                transform: translateX(100vw) translateY(100vh) rotate(180deg);
                 opacity: 0;
             }
             10% {
@@ -136,14 +138,14 @@
                 opacity: 1;
             }
             100% {
-                transform: translateX(-100px) translateY(0) rotate(-45deg);
+                transform: translateX(-100px) translateY(-100px) rotate(180deg);
                 opacity: 0;
             }
         }
 
-        @keyframes cometFly3 {
+        @keyframes cometDownRight {
             0% {
-                transform: translateX(110vw) translateY(60vh) rotate(-60deg);
+                transform: translateX(-200px) translateY(-100px) rotate(-45deg);
                 opacity: 0;
             }
             10% {
@@ -153,14 +155,14 @@
                 opacity: 1;
             }
             100% {
-                transform: translateX(-100px) translateY(50px) rotate(-60deg);
+                transform: translateX(100vw) translateY(100vh) rotate(-45deg);
                 opacity: 0;
             }
         }
 
-        @keyframes cometFly4 {
+        @keyframes cometDownLeft {
             0% {
-                transform: translateX(90vw) translateY(90vh) rotate(-15deg);
+                transform: translateX(120vw) translateY(-100px) rotate(225deg);
                 opacity: 0;
             }
             10% {
@@ -170,7 +172,41 @@
                 opacity: 1;
             }
             100% {
-                transform: translateX(-100px) translateY(-80px) rotate(-15deg);
+                transform: translateX(-200px) translateY(100vh) rotate(225deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes cometDiagonalRight {
+            0% {
+                transform: translateX(-150px) translateY(150px) rotate(-30deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100vw) translateY(80vh) rotate(-30deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes cometDiagonalLeft {
+            0% {
+                transform: translateX(110vw) translateY(150px) rotate(210deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-150px) translateY(80vh) rotate(210deg);
                 opacity: 0;
             }
         }
@@ -895,7 +931,7 @@
         // Создание звездного неба
         function createStarfield() {
             const container = document.getElementById('starsContainer');
-            const starCount = 300; // Увеличил количество звезд
+            const starCount = 300;
 
             // Создаем звезды
             for (let i = 0; i < starCount; i++) {
@@ -920,54 +956,63 @@
                 container.appendChild(star);
             }
 
-            // Создаем кометы с разными траекториями
-            createComet('cometFly1', 0);
-            createComet('cometFly2', 2000);
-            createComet('cometFly3', 4000);
-            createComet('cometFly4', 6000);
+            // Создаем начальные кометы
+            createRandomComet(0);
+            createRandomComet(3000);
+            createRandomComet(6000);
 
-            // Периодически создаем новые кометы (в 10 раз чаще)
+            // Периодически создаем новые кометы (в 10 раз реже)
             setInterval(() => {
-                const animations = ['cometFly1', 'cometFly2', 'cometFly3', 'cometFly4'];
-                const randomAnim = animations[Math.floor(Math.random() * animations.length)];
-                createComet(randomAnim, 0);
-            }, 800); // Каждые 0.8 секунды новая комета
+                createRandomComet(0);
+            }, 8000); // Каждые 8 секунд новая комета
         }
 
-        // Создание кометы
-        function createComet(animationType, delay) {
+        // Создание случайной кометы
+        function createRandomComet(delay) {
             const container = document.getElementById('starsContainer');
             const comet = document.createElement('div');
             comet.className = 'comet';
             
-            // Случайная стартовая позиция в зависимости от типа анимации
+            // Случайная анимация из доступных (только не вверх)
+            const animations = ['cometRight', 'cometLeft', 'cometDownRight', 'cometDownLeft', 'cometDiagonalRight', 'cometDiagonalLeft'];
+            const randomAnim = animations[Math.floor(Math.random() * animations.length)];
+            
+            // Случайная позиция в зависимости от анимации
             let startX, startY;
             
-            switch(animationType) {
-                case 'cometFly1':
+            switch(randomAnim) {
+                case 'cometRight':
+                    startX = '-100px';
+                    startY = Math.random() * 100 + 100 + 'vh';
+                    break;
+                case 'cometLeft':
                     startX = '100vw';
-                    startY = '100vh';
+                    startY = Math.random() * 100 + 100 + 'vh';
                     break;
-                case 'cometFly2':
+                case 'cometDownRight':
+                    startX = '-200px';
+                    startY = '-100px';
+                    break;
+                case 'cometDownLeft':
                     startX = '120vw';
-                    startY = '80vh';
+                    startY = '-100px';
                     break;
-                case 'cometFly3':
+                case 'cometDiagonalRight':
+                    startX = '-150px';
+                    startY = '150px';
+                    break;
+                case 'cometDiagonalLeft':
                     startX = '110vw';
-                    startY = '60vh';
-                    break;
-                case 'cometFly4':
-                    startX = '90vw';
-                    startY = '90vh';
+                    startY = '150px';
                     break;
             }
             
             comet.style.left = startX;
             comet.style.top = startY;
             
-            // Быстрая анимация (в 10 раз быстрее)
-            const duration = 0.8 + Math.random() * 0.4; // 0.8-1.2 секунды
-            comet.style.animation = `${animationType} ${duration}s linear ${delay}ms`;
+            // Быстрая анимация
+            const duration = 2 + Math.random() * 2; // 2-4 секунды
+            comet.style.animation = `${randomAnim} ${duration}s linear ${delay}ms`;
             
             container.appendChild(comet);
             
