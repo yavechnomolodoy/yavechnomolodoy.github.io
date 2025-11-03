@@ -252,27 +252,35 @@
             animation-delay: 6s;
         }
 
-        /* Звезда над заголовком */
-        .center-star {
+        /* Сердечко над заголовком */
+        .center-heart {
             position: absolute;
             top: 15%;
             left: 50%;
             transform: translateX(-50%);
             font-size: 4em;
-            opacity: 0.4;
-            animation: star-twinkle 3s ease-in-out infinite;
-            text-shadow: 0 0 15px gold;
+            opacity: 0.32; /* На 20% прозрачнее (было 0.4) */
+            animation: heart-beat 2s ease-in-out infinite;
+            text-shadow: 0 0 15px #ff3366;
             z-index: 1;
-            color: gold;
+            color: #ff3366;
         }
 
-        @keyframes star-twinkle {
+        @keyframes heart-beat {
             0%, 100% { 
-                opacity: 0.3;
+                opacity: 0.25;
                 transform: translateX(-50%) scale(0.9);
             }
+            25% { 
+                opacity: 0.4;
+                transform: translateX(-50%) scale(1.15);
+            }
             50% { 
-                opacity: 0.7;
+                opacity: 0.32;
+                transform: translateX(-50%) scale(1.05);
+            }
+            75% { 
+                opacity: 0.45;
                 transform: translateX(-50%) scale(1.1);
             }
         }
@@ -282,10 +290,10 @@
     <!-- Плавающие элементы фона -->
     <div class="floating-element element-1">⚡</div>
     <div class="floating-element element-2">🚀</div>
-    <div class="floating-element element-3">⭐</div>
+    <div class="floating-element element-3">💙</div>
     
-    <!-- Звезда над заголовком -->
-    <div class="center-star">🌟</div>
+    <!-- Сердечко над заголовком -->
+    <div class="center-heart">❤️</div>
 
     <!-- Навигационное меню -->
     <nav class="navbar">
