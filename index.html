@@ -206,32 +206,60 @@
         .contact-info p:nth-child(2) { animation-delay: 0.5s; }
 
         /* Дополнительные элементы */
-        /* СУПЕР-ЯРКАЯ радужная молния */
+        /* Яркие радужные элементы */
 .floating-element {
     position: absolute;
-    font-size: 4em;
+    font-size: 3em; /* Увеличил размер */
     font-weight: bold;
-    opacity: 0.9;
-    animation: float 4s ease-in-out infinite, super-rainbow 2s linear infinite;
-    text-shadow: 
-        0 0 10px #fff,
-        0 0 20px currentColor,
-        0 0 30px currentColor;
+    opacity: 0.8; /* Сделал ярче */
+    animation: float 6s ease-in-out infinite, rainbow 3s ease-in-out infinite;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
     z-index: 1;
-    filter: drop-shadow(0 0 10px currentColor);
 }
 
-@keyframes super-rainbow {
-    0% { color: #ff0000; filter: drop-shadow(0 0 15px #ff0000); }
-    14% { color: #ff5500; filter: drop-shadow(0 0 15px #ff5500); }
-    28% { color: #ffff00; filter: drop-shadow(0 0 15px #ffff00); }
-    42% { color: #55ff00; filter: drop-shadow(0 0 15px #55ff00); }
-    56% { color: #00ffaa; filter: drop-shadow(0 0 15px #00ffaa); }
-    70% { color: #00aaff; filter: drop-shadow(0 0 15px #00aaff); }
-    84% { color: #aa00ff; filter: drop-shadow(0 0 15px #aa00ff); }
-    100% { color: #ff00aa; filter: drop-shadow(0 0 15px #ff00aa); }
+@keyframes rainbow {
+    0% { color: #ff0000; } /* Красный */
+    16% { color: #ff8000; } /* Оранжевый */
+    33% { color: #ffff00; } /* Жёлтый */
+    50% { color: #00ff00; } /* Зелёный */
+    66% { color: #0000ff; } /* Синий */
+    83% { color: #8000ff; } /* Фиолетовый */
+    100% { color: #ff0080; } /* Розовый */
 }
-        }
+
+@keyframes float {
+    0%, 100% { 
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    25% { 
+        transform: translateY(-25px) rotate(90deg) scale(1.2);
+    }
+    50% { 
+        transform: translateY(-10px) rotate(180deg) scale(1.1);
+    }
+    75% { 
+        transform: translateY(-30px) rotate(270deg) scale(1.3);
+    }
+}
+
+.element-1 {
+    top: 15%;
+    left: 5%;
+    animation-delay: 0s;
+    font-size: 4em; /* Молния больше */
+}
+
+.element-2 {
+    top: 65%;
+    right: 8%;
+    animation-delay: 1s;
+}
+
+.element-3 {
+    bottom: 15%;
+    left: 10%;
+    animation-delay: 2s;
+} }
     </style>
 </head>
 <body>
